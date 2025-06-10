@@ -1,11 +1,12 @@
-const Note = require("../models/notes.model");
-const { findByIdAndUpdate } = require("../models/users.model");
+const Note = require("../models/note.model");
 
 const createNote = async (req, res) => {
   try {
     const payload = req.body;
     const response = await Note.create(payload);
-    res.status(201).json({ success: true, data: response });
+    res
+      .status(201)
+      .json({ success: true, message: "Note created", data: response });
   } catch (err) {
     if (err.name === "ValidationError") {
       res.status(400).json({
@@ -23,9 +24,13 @@ const createNote = async (req, res) => {
 
 const getNotes = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const userId = req.user.userId;
+    console.log(userId);
+    
     const response = await Note.find({ userId: userId });
-    res.status(200).json({ success: true, data: response });
+    res
+      .status(200)
+      .json({ success: true, message: "Notes fetched", data: response });
   } catch (err) {
     res.status(400).json({
       success: false,
@@ -42,7 +47,14 @@ const updateNote = async (req, res) => {
       runValidators: true,
       new: true,
     });
-    res.status(200).json({ success: true, data: response });
+    if (!response) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Note not found" });
+    }
+    res
+      .status(200)
+      .json({ success: true, message: "Note Updated", data: response });
   } catch (err) {
     if (err.name === "ValidationError") {
       res.status(400).json({
@@ -62,7 +74,14 @@ const deleteNote = async (req, res) => {
   try {
     const { id: noteId } = req.params;
     const response = await Note.findByIdAndDelete(noteId);
-    res.status(200).json({ success: true, data: response });
+    if (!response) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Note not found" });
+    }
+    res
+      .status(200)
+      .json({ success: true, message: "Note deleted", data: response });
   } catch (err) {
     res.status(400).json({
       success: false,

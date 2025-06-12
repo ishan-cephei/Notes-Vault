@@ -7,12 +7,14 @@ const loginUser = async (req, res) => {
     const { email, password, name } = req.body;
     const user = await User.findOne({ email: email });
     if (!user) {
-      res.status(400).json({ success: false, message: "User doesn't exist" });
+      res.status(400).json({ success: false, message: "User does not exist" });
       return;
     }
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) {
-      res.status(401).json({ success: false, message: "Incorrect Password" });
+      res
+        .status(401)
+        .json({ success: false, message: "Password is incorrect" });
       return;
     }
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
@@ -23,6 +25,7 @@ const loginUser = async (req, res) => {
       message: "Login successful",
       data: {
         token,
+        loggedInUser: { name: user.name, email: user.email },
       },
     });
   } catch (err) {

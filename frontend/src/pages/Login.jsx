@@ -16,14 +16,18 @@ import axios from "../../axiosInstance";
 import { toast } from "react-toastify";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
-export default function LoginForm() {
+export default function Login() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm();
   const [isButtonLoading, setIsButtonLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleLogin = async (data) => {
     try {
@@ -33,10 +37,30 @@ export default function LoginForm() {
         data
       );
       localStorage.setItem("token", response.data.data.token);
-      toast.success("Log-In Successfull");
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          name: response.data.data.loggedInUser.name,
+          email: response.data.data.loggedInUser.email,
+        })
+      );
+      navigate("/");
     } catch (err) {
-      console.log(err);
-      toast.error(err.response.data.message || "Error occurred while Log-In");
+      const message = err.response?.data?.message || "Login failed";
+
+      if (message === "User does not exist") {
+        setError("email", {
+          type: "manual",
+          message: message,
+        });
+      } else if (message === "Password is incorrect") {
+        setError("password", {
+          type: "manual",
+          message: message,
+        });
+      } else {
+        toast.error(message);
+      }
     } finally {
       setIsButtonLoading(false);
     }
@@ -49,18 +73,18 @@ export default function LoginForm() {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
-        backgroundColor: "#faf0e6",
+        backgroundColor: "#FFF1ED",
       }}
     >
       <Card className="w-full max-w-sm">
         <div className="flex flex-row items-center justify-center gap-1 pt-6">
           <NotebookPen
             className="w-10 h-10 mb-2"
-            style={{ color: "#2dd4bf" }}
+            style={{ color: "#FFB5A7" }}
           />
           <h1
             className="text-2xl font-semibold text-center"
-            style={{ color: "#2dd4bf" }}
+            style={{ color: "#FFB5A7" }}
           >
             Notes Vault
           </h1>
@@ -130,6 +154,15 @@ export default function LoginForm() {
                   "Login"
                 )}
               </Button>
+              <p className="text-sm text-muted-foreground">
+                Don’t have an account?{" "}
+                <Link
+                  to="/register"
+                  className="text-primary hover:underline font-medium"
+                >
+                  Register
+                </Link>
+              </p>
             </CardFooter>
           </form>
         </CardContent>

@@ -2,8 +2,9 @@ const Note = require("../models/note.model");
 
 const createNote = async (req, res) => {
   try {
+    const userId = req.user.userId;
     const payload = req.body;
-    const response = await Note.create(payload);
+    const response = await Note.create({ userId, ...payload });
     res
       .status(201)
       .json({ success: true, message: "Note created", data: response });
@@ -25,9 +26,9 @@ const createNote = async (req, res) => {
 const getNotes = async (req, res) => {
   try {
     const userId = req.user.userId;
-    console.log(userId);
-    
     const response = await Note.find({ userId: userId });
+    console.log(response);
+
     res
       .status(200)
       .json({ success: true, message: "Notes fetched", data: response });

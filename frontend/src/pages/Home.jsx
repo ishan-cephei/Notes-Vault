@@ -1,7 +1,13 @@
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import axios from "../../axiosInstance";
+import NoteCard from "../components/NoteCard";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+
 const Home = () => {
+  const [notes, setNotes] = useState([]);
+  const [isPageLoading, setIsPageLoading] = useState(true);
   const userDetailsString = localStorage.getItem("user");
   const userDetails = userDetailsString
     ? JSON.parse(userDetailsString)
@@ -13,14 +19,58 @@ const Home = () => {
 
   const getNotes = async () => {
     try {
+      setIsPageLoading(true);
       const response = await axios.get("/api/notes");
+      setNotes(response.data.data);
     } catch (err) {
+      toast.error(err.response.data.message || "Something went wrong");
+    } finally {
+      setIsPageLoading(false);
+    }
+  };
+
+  const deleteNote = async (noteId) => {
+    try {
+      const response = await axios.delete(`/api/notes/${noteId}`);
+      getNotes();
+    } catch (error) {
       toast.error(err.response.data.message || "Something went wrong");
     }
   };
+
+  if (isPageLoading) {
+    return (
+      <div
+        style={{
+          width: "100vw",
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Loader2 className="h-10 w-10 animate-spin text-#FFB5A7" />
+      </div>
+    );
+  }
   return (
-    <div>
-      {`Welcome ${userDetails.name}. Your mail ID is ${userDetails.email}`}
+    <div className="p-4 ">
+      <div className="mb-6">
+        <h1 className="text-2xl font-semibold">Hello, {userDetails.name} 👋</h1>
+        <p className="text-muted-foreground text-sm">
+          Welcome back! Here are your latest notes.
+        </p>
+      </div>
+      <div className="grid gap-5 grid-cols-[repeat(auto-fill,minmax(280px,1fr))]">
+        {notes.map((note) => (
+          <NoteCard
+            key={note._id}
+            note={note}
+            noteId={note._id}
+            deleteNote={deleteNote}
+          />
+        ))}
+      </div>
     </div>
   );
 };

@@ -4,9 +4,17 @@ import axios from "../../axiosInstance";
 import NoteCard from "../components/NoteCard";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import NoteDialog from "../components/NoteDialog";
+import AppSidebar from "../components/ui/app-sidebar";
 
 const Home = () => {
   const [notes, setNotes] = useState([]);
+  const [noteDetails, setNoteDetails] = useState({
+    title: "",
+    content: "",
+    file: "",
+  });
+  const [isNoteDialogOpen, setIsNoteDialogOpen] = useState(false);
   const [isPageLoading, setIsPageLoading] = useState(true);
   const userDetailsString = localStorage.getItem("user");
   const userDetails = userDetailsString
@@ -38,6 +46,14 @@ const Home = () => {
     }
   };
 
+  const closeNoteDialog = () => {
+    setIsNoteDialogOpen(false);
+  };
+
+  const openNoteDialog = () => {
+    setIsNoteDialogOpen(true);
+  };
+
   if (isPageLoading) {
     return (
       <div
@@ -53,6 +69,7 @@ const Home = () => {
       </div>
     );
   }
+
   return (
     <div className="p-4 ">
       <div className="mb-6">
@@ -71,6 +88,13 @@ const Home = () => {
           />
         ))}
       </div>
+      <NoteDialog
+        noteDetails={noteDetails}
+        setNoteDetails={setNoteDetails}
+        closeDialog={closeNoteDialog}
+        open={isNoteDialogOpen}
+        setOpen={setIsNoteDialogOpen}
+      />
     </div>
   );
 };

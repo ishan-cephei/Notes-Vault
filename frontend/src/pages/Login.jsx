@@ -147,9 +147,13 @@ export default function Login() {
               </div>
             </div>
             <CardFooter className="flex-col gap-2 mt-6 px-0">
-              <Button type="submit" className="w-full">
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isButtonLoading}
+              >
                 {isButtonLoading ? (
-                  <Loader2 className="h-6 w-6 animate-spin text-#ffffff" />
+                  <Loader2 className="h-8 w-8 animate-spin text-#ffffff" />
                 ) : (
                   "Login"
                 )}

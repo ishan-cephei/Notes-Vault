@@ -129,15 +129,7 @@ export default function Register() {
                 )}
               </div>
               <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
+                <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   type="password"
@@ -159,7 +151,11 @@ export default function Register() {
               </div>
             </div>
             <CardFooter className="flex-col gap-2 mt-6 px-0">
-              <Button type="submit" className="w-full">
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isButtonLoading}
+              >
                 {isButtonLoading ? (
                   <Loader2 className="h-6 w-6 animate-spin text-#ffffff" />
                 ) : (

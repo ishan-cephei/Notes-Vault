@@ -5,21 +5,13 @@ import Register from "./pages/Register";
 import Home from "./pages/Home";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
-import DashboardLayout from "./layouts/DashboardLayout";
 function App() {
   return (
     <BrowserRouter>
       <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
         <Route element={<ProtectedRoute />}>
-          <Route
-            path="/"
-            element={
-              <DashboardLayout>
-                <Home />
-              </DashboardLayout>
-            }
-          />
+          <Route path="/" element={<Home />} />
         </Route>
 
         <Route path="/login" element={<Login />} />

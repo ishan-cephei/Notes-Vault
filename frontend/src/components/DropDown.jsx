@@ -5,8 +5,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+} from "@/components/shadcn/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/shadcn/avatar";
 import { useNavigate } from "react-router-dom";
 
 const Dropdown = ({ initials }) => {
@@ -26,7 +26,10 @@ const Dropdown = ({ initials }) => {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem style={{ color: "red", cursor:"pointer" }} onClick={handleLogout}>
+        <DropdownMenuItem
+          style={{ color: "red", cursor: "pointer" }}
+          onClick={handleLogout}
+        >
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>

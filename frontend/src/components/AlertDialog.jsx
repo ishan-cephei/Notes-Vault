@@ -7,7 +7,7 @@ import {
   AlertDialogFooter,
   AlertDialogCancel,
   AlertDialogAction,
-} from "@/components/ui/alert-dialog";
+} from "@/components/shadcn/alert-dialog";
 
 const AlertPopUp = ({ open, setOpen, noteId, deleteNote }) => {
   return (

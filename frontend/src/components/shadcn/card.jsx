@@ -34,6 +34,7 @@ function CardTitle({ className, ...props }) {
       data-slot="card-title"
       className={cn("leading-none font-semibold", className)}
       {...props}
+      style={{ fontSize: "20px" }}
     />
   );
 }
@@ -67,6 +68,7 @@ function CardContent({ className, ...props }) {
       data-slot="card-content"
       className={cn("px-6", className)}
       {...props}
+      style={{ fontSize: "15px" }}
     />
   );
 }

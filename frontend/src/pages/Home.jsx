@@ -5,9 +5,10 @@ import NoteCard from "../components/NoteCard";
 import { NotebookPen } from "lucide-react";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import NoteDialog from "../components/NoteDialog";
+import CreateNoteDialog from "../components/CreateNoteDialog.jsx";
+import ViewNoteDialog from "../components/ViewNoteDialog.jsx";
 import Dropdown from "../components/DropDown.jsx";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn/button";
 
 const Home = () => {
   const [notes, setNotes] = useState([]);
@@ -16,7 +17,10 @@ const Home = () => {
     content: "",
     image: "",
   });
-  const [isNoteDialogOpen, setIsNoteDialogOpen] = useState(false);
+  const [isCreateNoteDialogOpen, setIsCreateNoteDialogOpen] = useState(false);
+  const [isViewNoteDialogOpen, setIsViewNoteDialogOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [currentNoteId, setCurrentNoteId] = useState(null);
   const [isPageLoading, setIsPageLoading] = useState(true);
   const userDetailsString = localStorage.getItem("user");
   const userDetails = userDetailsString
@@ -39,8 +43,8 @@ const Home = () => {
     }
   };
 
-  const closeNoteDialog = () => {
-    setIsNoteDialogOpen(false);
+  const closeCreateNoteDialog = () => {
+    setIsCreateNoteDialogOpen(false);
     setNoteDetails({
       title: "",
       content: "",
@@ -48,8 +52,16 @@ const Home = () => {
     });
   };
 
-  const openNoteDialog = () => {
-    setIsNoteDialogOpen(true);
+  const openCreateNoteDialog = () => {
+    setIsCreateNoteDialogOpen(true);
+  };
+
+  const closeViewNoteDialog = () => {
+    setIsViewNoteDialogOpen(false);
+  };
+
+  const openViewNoteDialog = () => {
+    setIsViewNoteDialogOpen(true);
   };
 
   if (isPageLoading) {
@@ -69,7 +81,7 @@ const Home = () => {
   }
 
   return (
-    <div className="p-4 h-screen" style={{ backgroundColor: "#FFF1ED" }}>
+    <div className="p-4 min-h-screen " style={{ backgroundColor: "#FFF1ED" }}>
       <div className="home-header flex flex-row justify-between mb-8">
         <div className="flex flex-row items-center  gap-1 ">
           <NotebookPen
@@ -96,7 +108,13 @@ const Home = () => {
             Welcome back! Here are your latest notes.
           </p>
         </div>
-        <Button onClick={() => openNoteDialog()} className="m-3">
+        <Button
+          onClick={() => {
+            setIsEditMode(false);
+            openCreateNoteDialog();
+          }}
+          className="m-3"
+        >
           Create New Note
         </Button>
       </div>
@@ -106,18 +124,36 @@ const Home = () => {
           <NoteCard
             key={note._id}
             note={note}
-            noteId={note._id}
+            noteDetails={noteDetails}
+            setNoteDetails={setNoteDetails}
+            setCurrentNoteId={setCurrentNoteId}
             getNotes={getNotes}
+            setIsEditMode={setIsEditMode}
+            openCreateNoteDialog={openCreateNoteDialog}
+            openViewNoteDialog={openViewNoteDialog}
+            isCreateNoteDialogOpen={isCreateNoteDialogOpen}
+            setIsCreateNoteDialogOpen={setIsCreateNoteDialogOpen}
+            isEditMode={isEditMode}
           />
         ))}
       </div>
-      <NoteDialog
+      <CreateNoteDialog
         noteDetails={noteDetails}
         setNoteDetails={setNoteDetails}
-        closeDialog={closeNoteDialog}
-        open={isNoteDialogOpen}
-        setOpen={setIsNoteDialogOpen}
         getNotes={getNotes}
+        setIsEditMode={setIsEditMode}
+        openCreateNoteDialog={openCreateNoteDialog}
+        closeDialog={closeCreateNoteDialog}
+        open={isCreateNoteDialogOpen}
+        setOpen={setIsCreateNoteDialogOpen}
+        isEditMode={isEditMode}
+        currentNoteId={currentNoteId}
+      />
+      <ViewNoteDialog
+        notes={notes}
+        currentNoteId={currentNoteId}
+        open={isViewNoteDialogOpen}
+        setOpen={setIsViewNoteDialogOpen}
       />
     </div>
   );

@@ -7,10 +7,10 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+} from "@/components/shadcn/card";
+import { Input } from "@/components/shadcn/input";
+import { Button } from "@/components/shadcn/button";
+import { Label } from "@/components/shadcn/label";
 import { NotebookPen } from "lucide-react";
 import axios from "../../axiosInstance";
 import { toast } from "react-toastify";

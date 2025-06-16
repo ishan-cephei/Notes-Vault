@@ -6,14 +6,22 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+} from "@/components/shadcn/card";
+import { Button } from "@/components/shadcn/button";
 import { Eye, Pencil, Trash } from "lucide-react";
 import AlertPopUp from "../components/AlertDialog";
 import { toast } from "react-toastify";
 import axios from "../../axiosInstance";
 
-export default function NoteCard({ note, noteId, getNotes }) {
+export default function NoteCard({
+  note,
+  setNoteDetails,
+  setCurrentNoteId,
+  getNotes,
+  setIsEditMode,
+  openCreateNoteDialog,
+  openViewNoteDialog,
+}) {
   const [isDeletePopUpOpen, setIsDeletePopUpOpen] = useState(false);
 
   const openDeletePopUp = () => {
@@ -31,47 +39,62 @@ export default function NoteCard({ note, noteId, getNotes }) {
 
   return (
     <>
-      <Card className="rounded-2xl shadow-sm hover:shadow-md transition-all bg-white flex flex-col">
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold">{note.title}</CardTitle>
+      <Card className="h-[250px] rounded-2xl border border-zinc-200 bg-white shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col">
+        {/* Header */}
+        <CardHeader className="pb-1">
+          <CardTitle className="text-base font-semibold text-zinc-800 truncate">
+            {note.title}
+          </CardTitle>
         </CardHeader>
 
-        <CardContent className="flex-1 text-sm text-muted-foreground overflow-hidden break-words">
-          <p className="overflow-y-auto h-20 pr-1 whitespace-pre-wrap">
-            {note.content}
-          </p>
+        {/* Content */}
+        <CardContent className="px-4 text-sm text-zinc-600 -mt-1 flex-1 overflow-hidden">
+          <p className="line-clamp-3 whitespace-pre-wrap">{note.content}</p>
         </CardContent>
 
-        <CardFooter className="flex justify-between items-center gap-2 mt-2">
+        {/* Footer - pinned to bottom */}
+        <CardFooter className="px-4 flex justify-between items-center gap-2 mt-auto">
           <Button
             size="sm"
-            variant="outline"
-            className="flex-1 min-w-0 truncate"
+            variant="ghost"
+            className="flex items-center gap-1 text-blue-600 hover:bg-blue-50"
+            onClick={() => {
+              openViewNoteDialog();
+              setCurrentNoteId(note._id);
+            }}
           >
-            <Eye className="w-4 h-4 " /> View
+            <Eye className="w-4 h-4" /> View
           </Button>
 
           <Button
             size="sm"
             variant="secondary"
-            className="flex-1 min-w-0 truncate"
+            className="flex items-center gap-1 text-zinc-700 hover:bg-zinc-200"
+            onClick={() => {
+              setNoteDetails({ title: note.title, content: note.content });
+              setIsEditMode(true);
+              openCreateNoteDialog();
+              setCurrentNoteId(note._id);
+            }}
           >
-            <Pencil className="w-4 h-4 " /> Edit
+            <Pencil className="w-4 h-4" /> Edit
           </Button>
+
           <Button
             size="sm"
             variant="destructive"
-            className="flex-1 min-w-0 truncate"
-            onClick={() => openDeletePopUp()}
+            className="flex items-center gap-1 text-white"
+            onClick={openDeletePopUp}
           >
-            <Trash className="w-4 h-4  " /> Delete
+            <Trash className="w-4 h-4" /> Delete
           </Button>
         </CardFooter>
       </Card>
+
       <AlertPopUp
         open={isDeletePopUpOpen}
         setOpen={setIsDeletePopUpOpen}
-        noteId={noteId}
+        noteId={note._id}
         deleteNote={deleteNote}
       />
     </>

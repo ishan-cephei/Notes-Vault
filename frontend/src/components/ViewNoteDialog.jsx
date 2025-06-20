@@ -29,14 +29,15 @@ const ViewNoteDialog = ({ open, setOpen, notes, currentNoteId }) => {
           {findNote(currentNoteId)?.content}
         </div>
 
-        {findNote(currentNoteId)?.image && (
-          <div className="mt-4">
-            <img
-              src={findNote(currentNoteId)?.image}
-              alt="Note attachment"
-              className="w-full max-h-64 object-contain rounded-md border"
-            />
-          </div>
+        {findNote(currentNoteId)?.file && (
+          <a
+            href={findNote(currentNoteId)?.file}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline hover:text-blue-800 transition-colors duration-200"
+          >
+            View Attached File
+          </a>
         )}
 
         <DialogFooter className="mt-6">

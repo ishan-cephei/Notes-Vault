@@ -32,6 +32,7 @@ export default function NoteCard({
     try {
       const response = await axios.delete(`/api/notes/${noteId}`);
       getNotes();
+      toast.success("Your note has been deleted successfully");
     } catch (err) {
       toast.error(err.response.data.message || "Something went wrong");
     }
@@ -39,7 +40,7 @@ export default function NoteCard({
 
   return (
     <>
-      <Card className="h-[250px] rounded-2xl border border-zinc-200 bg-white shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col">
+      <Card className="h-[250px] w-[300px] rounded-2xl border border-zinc-200 bg-white shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col">
         {/* Header */}
         <CardHeader className="pb-1">
           <CardTitle className="text-base font-semibold text-zinc-800 truncate">
@@ -71,7 +72,11 @@ export default function NoteCard({
             variant="secondary"
             className="flex items-center gap-1 text-zinc-700 hover:bg-zinc-200"
             onClick={() => {
-              setNoteDetails({ title: note.title, content: note.content });
+              setNoteDetails({
+                title: note.title,
+                content: note.content,
+                file: note.file,
+              });
               setIsEditMode(true);
               openCreateNoteDialog();
               setCurrentNoteId(note._id);

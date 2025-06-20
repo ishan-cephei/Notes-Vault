@@ -29,9 +29,16 @@ const CreateNoteDialog = ({
   const handleCreateNote = async () => {
     try {
       setIsButtonLoading(true);
-      const response = await axios.post("/api/notes", noteDetails);
+      const formData = new FormData();
+      formData.append("title", noteDetails.title);
+      formData.append("content", noteDetails.content);
+      if (noteDetails.file) {
+        formData.append("file", noteDetails.file);
+      }
+      const response = await axios.post("/api/notes", formData);
       closeDialog();
       getNotes();
+      toast.success("Your note has been created successfully");
     } catch (err) {
       toast.error(err.response.data.message || "Something went wrong");
     } finally {
@@ -42,12 +49,16 @@ const CreateNoteDialog = ({
   const handleEditNote = async () => {
     try {
       setIsButtonLoading(true);
-      const response = await axios.put(
-        `/api/notes/${currentNoteId}`,
-        noteDetails
-      );
+      const formData = new FormData();
+      formData.append("title", noteDetails.title);
+      formData.append("content", noteDetails.content);
+      if (noteDetails.file) {
+        formData.append("file", noteDetails.file);
+      }
+      const response = await axios.put(`/api/notes/${currentNoteId}`, formData);
       closeDialog();
       getNotes();
+      toast.success("Your note has been edited successfully");
     } catch (err) {
       toast.error(err.response.data.message || "Something went wrong");
     } finally {
@@ -104,11 +115,27 @@ const CreateNoteDialog = ({
                 }
               />
             </div>
+
+            {noteDetails.file && typeof noteDetails.file === "string" && (
+              <a
+                href={noteDetails.file}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary underline hover:text-blue-800 transition-colors duration-200"
+              >
+                View Attached File
+              </a>
+            )}
             <div
               style={{ display: "flex", flexDirection: "column", gap: "8px" }}
             >
               <Label>Upload a file (Optional)</Label>
-              <Input type="file"></Input>
+              <Input
+                type="file"
+                onChange={(e) =>
+                  setNoteDetails({ ...noteDetails, file: e.target.files[0] })
+                }
+              ></Input>
             </div>
           </div>
           <DialogFooter className="sm:justify-end">

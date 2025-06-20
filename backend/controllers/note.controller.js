@@ -1,10 +1,26 @@
 const Note = require("../models/note.model");
+const uploadFileToS3 = require("../utils/s3Upload");
 
 const createNote = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const payload = req.body;
-    const response = await Note.create({ userId, ...payload });
+    const { title, content } = req.body;
+    let fileUrl = "";
+
+    if (req.file) {
+      fileUrl = await uploadFileToS3(
+        req.file.buffer,
+        req.file.originalname,
+        req.file.mimetype
+      );
+    }
+    const response = await Note.create({
+      title,
+      content,
+      file: fileUrl,
+      userId,
+    });
+
     res
       .status(201)
       .json({ success: true, message: "Note created", data: response });
@@ -43,11 +59,28 @@ const getNotes = async (req, res) => {
 const updateNote = async (req, res) => {
   try {
     const { id: noteId } = req.params;
-    const payload = req.body;
-    const response = await Note.findByIdAndUpdate(noteId, payload, {
-      runValidators: true,
-      new: true,
-    });
+    const { title, content } = req.body;
+    let fileUrl = "";
+
+    if (req.file) {
+      fileUrl = await uploadFileToS3(
+        req.file.buffer,
+        req.file.originalname,
+        req.file.mimetype
+      );
+    }
+    const response = await Note.findByIdAndUpdate(
+      noteId,
+      {
+        title,
+        content,
+        file: fileUrl,
+      },
+      {
+        runValidators: true,
+        new: true,
+      }
+    );
     if (!response) {
       return res
         .status(404)

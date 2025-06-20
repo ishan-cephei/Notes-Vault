@@ -15,7 +15,7 @@ const Home = () => {
   const [noteDetails, setNoteDetails] = useState({
     title: "",
     content: "",
-    image: "",
+    file: "",
   });
   const [isCreateNoteDialogOpen, setIsCreateNoteDialogOpen] = useState(false);
   const [isViewNoteDialogOpen, setIsViewNoteDialogOpen] = useState(false);
@@ -48,7 +48,7 @@ const Home = () => {
     setNoteDetails({
       title: "",
       content: "",
-      image: "",
+      file: "",
     });
   };
 
@@ -119,7 +119,7 @@ const Home = () => {
         </Button>
       </div>
 
-      <div className="grid gap-5 grid-cols-[repeat(auto-fill,minmax(280px,1fr))]">
+      <div className="grid gap-x-0 gap-y-5 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
         {notes.map((note) => (
           <NoteCard
             key={note._id}

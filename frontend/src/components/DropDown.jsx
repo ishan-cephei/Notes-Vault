@@ -18,7 +18,7 @@ const Dropdown = ({ initials }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="cursor-pointer w-10 h-10 bg-sky-500	text-white">
+        <Avatar className="cursor-pointer w-10 h-10 bg-primary	text-white">
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

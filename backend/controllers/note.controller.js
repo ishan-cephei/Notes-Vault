@@ -4,7 +4,8 @@ const uploadFileToS3 = require("../utils/s3Upload");
 const createNote = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const { title, content } = req.body;
+    const { title, content, file } = req.body;
+
     let fileUrl = "";
 
     if (req.file) {
@@ -17,7 +18,7 @@ const createNote = async (req, res) => {
     const response = await Note.create({
       title,
       content,
-      file: fileUrl,
+      file: fileUrl || file,
       userId,
     });
 
@@ -43,7 +44,6 @@ const getNotes = async (req, res) => {
   try {
     const userId = req.user.userId;
     const response = await Note.find({ userId: userId });
-    console.log(response);
 
     res
       .status(200)
@@ -59,7 +59,7 @@ const getNotes = async (req, res) => {
 const updateNote = async (req, res) => {
   try {
     const { id: noteId } = req.params;
-    const { title, content } = req.body;
+    const { title, content, file } = req.body;
     let fileUrl = "";
 
     if (req.file) {
@@ -74,7 +74,7 @@ const updateNote = async (req, res) => {
       {
         title,
         content,
-        file: fileUrl,
+        file: fileUrl || file,
       },
       {
         runValidators: true,

@@ -40,7 +40,7 @@ export default function NoteCard({
 
   return (
     <>
-      <Card className="h-[250px] w-[300px] rounded-2xl border border-zinc-200 bg-white shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col">
+      <Card className="h-[250px] w-[300px] rounded-2xl border border-zinc-200 bg-card shadow-xl hover:shadow-2xl transition-shadow duration-300 rounded-2xl flex flex-col">
         {/* Header */}
         <CardHeader className="pb-1">
           <CardTitle className="text-base font-semibold text-zinc-800 truncate">
@@ -88,7 +88,7 @@ export default function NoteCard({
           <Button
             size="sm"
             variant="destructive"
-            className="flex items-center gap-1 text-white"
+            className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-md transition-colors duration-200"
             onClick={openDeletePopUp}
           >
             <Trash className="w-4 h-4" /> Delete

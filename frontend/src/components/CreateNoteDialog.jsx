@@ -32,9 +32,8 @@ const CreateNoteDialog = ({
       const formData = new FormData();
       formData.append("title", noteDetails.title);
       formData.append("content", noteDetails.content);
-      if (noteDetails.file) {
-        formData.append("file", noteDetails.file);
-      }
+      formData.append("file", noteDetails.file);
+
       const response = await axios.post("/api/notes", formData);
       closeDialog();
       getNotes();
@@ -52,9 +51,8 @@ const CreateNoteDialog = ({
       const formData = new FormData();
       formData.append("title", noteDetails.title);
       formData.append("content", noteDetails.content);
-      if (noteDetails.file) {
-        formData.append("file", noteDetails.file);
-      }
+      formData.append("file", noteDetails.file);
+
       const response = await axios.put(`/api/notes/${currentNoteId}`, formData);
       closeDialog();
       getNotes();
@@ -117,14 +115,26 @@ const CreateNoteDialog = ({
             </div>
 
             {noteDetails.file && typeof noteDetails.file === "string" && (
-              <a
-                href={noteDetails.file}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary underline hover:text-blue-800 transition-colors duration-200"
-              >
-                View Attached File
-              </a>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <a
+                  href={noteDetails.file}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline hover:text-blue-800 transition-colors duration-200"
+                >
+                  View Attached File
+                </a>
+                <a
+                  href=""
+                  className="text-destructive underline"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setNoteDetails({ ...noteDetails, file: "" });
+                  }}
+                >
+                  Remove Attached File
+                </a>
+              </div>
             )}
             <div
               style={{ display: "flex", flexDirection: "column", gap: "8px" }}
